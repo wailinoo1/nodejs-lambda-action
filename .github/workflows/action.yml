@@ -1,0 +1,48 @@
+name: Deploy to Lambda
+
+on:
+  push:
+    branches:
+      - main  # Change to your main branch name
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '21'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Zip Lambda function
+        run: |
+          zip -r lambda.zip .
+
+      - name: Upload zip file to S3
+        env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}  # Replace with your AWS region
+          S3_BUCKET_NAME: your-s3-bucket-name  # Replace with your S3 bucket name
+        run: |
+          aws s3 cp lambda.zip s3://$S3_BUCKET_NAME/lambda-${{github.run_id}}.zip
+
+      - name: Update Lambda function code
+        env:
+          AWS_REGION: us-east-1  # Replace with your AWS region
+          AWS_LAMBDA_FUNCTION_NAME: your-lambda-function-name  # Replace with your Lambda function name
+        run: |
+          LATEST_PACKAGE=$(aws s3 ls s3://$S3_BUCKET_NAME/ | grep lambda | sort -r | head -n 1 | awk '{print $4}')
+          aws lambda update-function-code --function-name $AWS_LAMBDA_FUNCTION_NAME --s3-bucket $S3_BUCKET_NAME --s3-key lambda-${{github.run_id}}.zip --region $AWS_REGION
