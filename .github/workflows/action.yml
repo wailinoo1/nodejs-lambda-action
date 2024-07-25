@@ -35,14 +35,14 @@ jobs:
       - name: Upload zip file to S3
         env:
           AWS_REGION: ${{ secrets.AWS_REGION }}  # Replace with your AWS region
-          S3_BUCKET_NAME: your-s3-bucket-name  # Replace with your S3 bucket name
+          S3_BUCKET_NAME: nodebucketwlo  # Replace with your S3 bucket name
         run: |
           aws s3 cp lambda.zip s3://$S3_BUCKET_NAME/lambda-${{github.run_id}}.zip
 
       - name: Update Lambda function code
         env:
-          AWS_REGION: us-east-1  # Replace with your AWS region
-          AWS_LAMBDA_FUNCTION_NAME: your-lambda-function-name  # Replace with your Lambda function name
+          AWS_REGION: ${{ secrets.AWS_SECRET_ACCESS_KEY }}  # Replace with your AWS region
+          AWS_LAMBDA_FUNCTION_NAME: wlonodejstest  # Replace with your Lambda function name
         run: |
-          LATEST_PACKAGE=$(aws s3 ls s3://$S3_BUCKET_NAME/ | grep lambda | sort -r | head -n 1 | awk '{print $4}')
+          ##LATEST_PACKAGE=$(aws s3 ls s3://$S3_BUCKET_NAME/ | grep lambda | sort -r | head -n 1 | awk '{print $4}')
           aws lambda update-function-code --function-name $AWS_LAMBDA_FUNCTION_NAME --s3-bucket $S3_BUCKET_NAME --s3-key lambda-${{github.run_id}}.zip --region $AWS_REGION
