@@ -41,7 +41,7 @@ jobs:
 
       - name: Update Lambda function code
         env:
-          AWS_REGION: ${{ secrets.AWS_SECRET_ACCESS_KEY }}  # Replace with your AWS region
+          AWS_REGION: ${{ secrets.AWS_REGION }}  # Replace with your AWS region
           AWS_LAMBDA_FUNCTION_NAME: wlonodejstest  # Replace with your Lambda function name
           S3_BUCKET_NAME: nodebucketwlo
         run: |
