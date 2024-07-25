@@ -3,6 +3,7 @@
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "mysql": "^2.18.1",
-    "require": "^2.4.20"
+    "require": "^0.4.4",
+    "serverless-http": "^3.2.0"
   }
 }

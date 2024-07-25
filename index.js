@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mysql = require('mysql');
 const cors = require('cors');
+const serverless= require('serverless-http');
 
 const app = express();
 
@@ -65,7 +66,4 @@ app.post('/api/login', (req, res) => {
   });
 });
 
-
-app.listen(3000, () => {
-  console.log('Server is running on port 3000');
-});
+module.exports.handler = serverless(app);
