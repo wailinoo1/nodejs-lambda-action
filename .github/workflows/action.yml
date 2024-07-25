@@ -1,9 +1,12 @@
 name: Deploy to Lambda
 
 on:
-  push:
-    branches:
-      - main  # Change to your main branch name
+  workflow_dispatch:
+  # push:
+  #   branches: [ "main" ]
+  #push:
+  #branches:
+  # - main  # Change to your main branch name
 
 jobs:
   deploy:
