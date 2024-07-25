@@ -43,6 +43,6 @@ jobs:
         env:
           AWS_REGION: ${{ secrets.AWS_SECRET_ACCESS_KEY }}  # Replace with your AWS region
           AWS_LAMBDA_FUNCTION_NAME: wlonodejstest  # Replace with your Lambda function name
+          S3_BUCKET_NAME: nodebucketwlo
         run: |
-          ##LATEST_PACKAGE=$(aws s3 ls s3://$S3_BUCKET_NAME/ | grep lambda | sort -r | head -n 1 | awk '{print $4}')
           aws lambda update-function-code --function-name $AWS_LAMBDA_FUNCTION_NAME --s3-bucket $S3_BUCKET_NAME --s3-key lambda-${{github.run_id}}.zip --region $AWS_REGION
